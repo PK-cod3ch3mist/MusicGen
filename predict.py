@@ -9,6 +9,7 @@ from keras.layers import Dropout
 from keras.layers import LSTM
 from keras.layers import BatchNormalization as BatchNorm
 from keras.layers import Activation
+import matplotlib.pyplot as plt
 
 def generate():
     """ Generate a piano midi file """
@@ -74,6 +75,23 @@ def create_network(network_input, n_vocab):
     model.load_weights('weights.hdf5')
 
     return model
+
+def plotting_data(history):
+    #To visualize the accuracy v/s error
+    acc = [0.] + history.history['accuracy']
+    loss = history.history['loss']
+    plt.plot(acc, label='Accuracy')
+    plt.plot(loss, label='Loss')
+    plt.xlabel('epoch')
+    plt.legend()
+    plt.show()
+
+def train_model(X, Y, model):
+    model.summary() #To get the model layers and number of parameters
+    batch = 128 #batch_size depends on training data
+    epochs = 20 #epoch can be increased or decreased based on accuracy achieved
+    training_detail = model.fit(X, Y, epochs=epochs, batch_size=batch) 
+    plotting_data(training_detail) 
 
 def generate_notes(model, network_input, pitchnames, n_vocab):
     """ Generate notes from the neural network based on a sequence of notes """
